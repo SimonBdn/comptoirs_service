@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
+import comptoirs.entity.Produit;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -155,7 +156,12 @@ public class CommandeService {
         }
         commande.setEnvoyeele(LocalDate.now());
 
+        for(Ligne ligne: commande.getLignes()){
+            ligne.getProduit().setUnitesEnStock(ligne.getProduit().getUnitesEnStock()-ligne.getQuantite());
+            ligne.getProduit().setUnitesCommandees(ligne.getProduit().getUnitesCommandees()-ligne.getQuantite());
+        }
 
-        return newComm;
+
+        return commande;
     }
 }
